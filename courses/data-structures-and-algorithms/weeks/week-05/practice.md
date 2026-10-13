@@ -1,23 +1,24 @@
-# Week 5 — Məşğələ: Bubble, insertion, selection, counting sort + Sliding window (90 dəq)
+# Week 5 — Məşğələ: Bubble, insertion, selection, counting sort + Frequency array + Sliding window (90 dəq)
 
 **Qeyd (müəllim üçün):** planda olan Week 5 məşğələsi deyil — bax `lecture.md`-dəki
 qeyd. Rekursiya/merge/quick sort/divide & conquer `weeks/week-06/`-ya keçdi.
-Bunun yerinə bu həftənin pattern-i **sliding window** oldu (planda ikinci
-mərtəbədə, Week 6 üçün nəzərdə tutulmuşdu — bura tezləşdi).
+Bunun yerinə iki pattern bloku var: **frequency array** (Week 4-dən gücləndirmə,
+sortlama ilə birbaşa bağlıdır) və **sliding window** (planda ikinci mərtəbədə,
+Week 6 üçün nəzərdə tutulmuşdu, bura tezləşdi).
 
-**Məqsəd:** hər tələbə 4 sortlama alqoritmini sıfırdan yaza bilsin, nəticələri
-müqayisə etsin, sliding window pattern-ini (sabit ölçü) tanısın.
+**Məqsəd:** hər tələbə 4 sortlama alqoritmini sıfırdan yaza bilsin, frequency
+array pattern-ini sortlama ilə bağlı görsün, sliding window pattern-ini tanısın.
 
 Yarımqruplar ayrı — eyni plan iki dəfə. **Şifahi sorğu davam edir**
 (`assessment/oral.md`, Week 2-4 əhatəsində) — bu məşğələdə də 3-4 nəfər çağır,
-sortlama koda yazma blokunda (10-50 dəq) paralel apar.
+sortlama koda yazma blokunda (8-48 dəq) paralel apar.
 
 ## 0-8 dəq · Təkrar
 
 Kodsuz, lövhədə: "Linear search niyə O(n)? Prefix sum niyə qurulduqdan sonra
 sorğu O(1)?" — keçən həftənin köprüsü.
 
-## 8-50 dəq · 4 alqoritmi sıfırdan yaz
+## 8-48 dəq · 4 alqoritmi sıfırdan yaz
 
 Şablon vermə — mühazirədə gördükləri ideyadan özləri kodlasın. Sən lövhədə
 pseudocode-u xatırlat, kodu demə. **Bu blokda paralel şifahi sorğu apar**
@@ -38,14 +39,25 @@ int[] test = {5, 2, 9, 1, 5, 6, 3};
 Tez bitirən olsa, `System.nanoTime()` ilə 4-ünü böyük massivdə (məs. 10.000
 element) ölçdürt, fərqi gör.
 
-## 50-55 dəq · Körpü: frequency array-dan sliding window-a
+## 48-65 dəq · Pattern: Frequency array (gücləndirmə)
 
-Qısa xatırlatma (bloka çevirmə): "Week 4-də frequency array pattern-ini
-gördünüz — bütün massivi gəzib sayğac qurmaq. Bəzən isə bütün massivə yox,
-massivin **ardıcıl bir parçasına** (pəncərə) baxmaq lazımdır. Bu, sliding
-window-dur."
+Körpü: "Counting sort-da elə bu gördünüz — sayğac massivi. Week 4-də bu
+pattern-i tanımışdınız, bu gün sortlamanın öz içindən çıxdığını görürsünüz."
 
-## 55-85 dəq · Pattern: Sliding window (sabit ölçü)
+```java
+int[] count = new int[maxValue + 1];
+for (int x : a) count[x]++;
+```
+
+Məsələlər (LeetCode):
+1. **Majority Element (169)** — ən çox təkrarlanan elementi tap
+2. **Contains Duplicate (217)** — təkrar var, yox?
+3. **Single Number (136)** — yalnız bir dəfə rast gələni tap (bonus: XOR ilə
+   əlavə yaddaşsız həll — tez bitirənlər üçün göstər)
+
+Gəzirsən, ilişənə sual verirsən, həllini demirsən.
+
+## 65-85 dəq · Pattern: Sliding window (sabit ölçü)
 
 **İdeya:** `k` ölçülü pəncərəni massiv üzərində sürüşdür, hər addımda yalnız
 **çıxan və daxil olan** elementi hesaba al — hər dəfə bütün pəncərəni yenidən
@@ -76,15 +88,13 @@ static int maxSumSubarray(int[] a, int k) {
 
 **Vurğula:** brute force (hər pəncərəni sıfırdan cəmləmək) O(n×k) olardı,
 sliding window ilə **O(n)** — hər element yalnız bir dəfə əlavə, bir dəfə
-çıxarılır. Bu, həmin "iki yol, bir sürət fərqi" hissinin (Week 2) davamıdır.
+çıxarılır.
 
 Məsələlər (LeetCode, sabit ölçü pəncərə):
 1. **Maximum Average Subarray I (643)** — yuxarıdaki kodun üstündə, cəmi `k`-ya böl
-2. **Maximum Sum Subarray of Size K** (GeeksforGeeks klassiki, LeetCode-da yoxdur
-   amma çox tapşırılır) — yuxarıdaki kodu birbaşa yaz
 
 **Bonus (tez bitirənlər üçün, dəyişən ölçü pəncərə — qabaqcadan göstər):**
-3. **Minimum Size Subarray Sum (209)** — pəncərə böyüyür/kiçilir, cəm şərtə görə
+2. **Minimum Size Subarray Sum (209)** — pəncərə böyüyür/kiçilir, cəm şərtə görə
 
 Gəzirsən, ilişənə sual verirsən, kodu demirsən.
 
@@ -97,6 +107,7 @@ Hamı `week-05/` qovluğuna push etsin. Push etməyəni və şifahi sorğuda kim
 
 Bu məşğələ əslində Week 3/4-ün tamamlanmasıdır (bubble sort rəsmən Week 3-ün,
 counting sort Week 4-ün mövzusu idi, ICAO-due düzgün keçilməmişdi). Insertion
-və selection sort rəsmi planda yoxdur, bu il əlavə edilib. Sliding window
-planda Week 6 üçün (ikinci mərtəbə) nəzərdə tutulmuşdu, bura tezləşdi —
-`patterns/README.md`-i buna uyğun yenilə.
+və selection sort rəsmi planda yoxdur, bu il əlavə edilib. Frequency array
+blok vaxtı azdırsa, Single Number-in XOR bonusunu at — əsas 3 məsələ kifayətdir.
+Sliding window planda Week 6 üçün (ikinci mərtəbə) nəzərdə tutulmuşdu, bura
+tezləşdi — `patterns/README.md`-i buna uyğun yenilə.
