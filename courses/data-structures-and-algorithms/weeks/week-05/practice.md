@@ -1,124 +1,102 @@
-# Week 5 — Məşğələ: Merge sort, quick sort, divide & conquer (90 dəq)
+# Week 5 — Məşğələ: Bubble, insertion, selection, counting sort + Sliding window (90 dəq)
 
-**Məqsəd:** hər tələbə merge sort-u tam koda çevirə bilsin, quick sort-un
-partition addımını izləyə/dəyişə bilsin, pattern olaraq divide & conquer-i tanısın.
+**Qeyd (müəllim üçün):** planda olan Week 5 məşğələsi deyil — bax `lecture.md`-dəki
+qeyd. Rekursiya/merge/quick sort/divide & conquer `weeks/week-06/`-ya keçdi.
+Bunun yerinə bu həftənin pattern-i **sliding window** oldu (planda ikinci
+mərtəbədə, Week 6 üçün nəzərdə tutulmuşdu — bura tezləşdi).
 
-Yarımqruplar ayrı — eyni plan iki dəfə. **Bu məşğələdə şifahi sorğu da başlayır**
-(bax aşağıda, 55-85 dəq bloku) — `assessment/oral.md`-dəki qrafikə görə hər
-yarımqrupdan 3-4 nəfər, Week 2-4 əhatəsində (massiv, bubble/counting sort,
-linear search).
+**Məqsəd:** hər tələbə 4 sortlama alqoritmini sıfırdan yaza bilsin, nəticələri
+müqayisə etsin, sliding window pattern-ini (sabit ölçü) tanısın.
 
-## 0-10 dəq · Rekursiya isinmə
+Yarımqruplar ayrı — eyni plan iki dəfə. **Şifahi sorğu davam edir**
+(`assessment/oral.md`, Week 2-4 əhatəsində) — bu məşğələdə də 3-4 nəfər çağır,
+sortlama koda yazma blokunda (10-50 dəq) paralel apar.
 
-Kodsuz, lövhədə, sürətli-atəş:
+## 0-8 dəq · Təkrar
 
-- "fakt(4) çağırılanda neçə qutu (stack frame) açılır?" — birlikdə say
-- "Base case olmasa nə olar?" — `StackOverflowError`
-- 1 nəfər lövhədə Fibonacci-ni rekursiv yazsın: `fib(n) = fib(n-1) + fib(n-2)`,
-  base case `fib(0)=0, fib(1)=1`
+Kodsuz, lövhədə: "Linear search niyə O(n)? Prefix sum niyə qurulduqdan sonra
+sorğu O(1)?" — keçən həftənin köprüsü.
 
-Bağla: "Fibonacci-nin rekursiv versiyası çox təkrar iş görür — bunu Week 12-də
-(memoization) düzəldəcəyik. Bu gün problemi **doğru bölən** rekursiyaya baxırıq."
+## 8-50 dəq · 4 alqoritmi sıfırdan yaz
 
-## 10-40 dəq · Merge sort — tam kod
+Şablon vermə — mühazirədə gördükləri ideyadan özləri kodlasın. Sən lövhədə
+pseudocode-u xatırlat, kodu demə. **Bu blokda paralel şifahi sorğu apar**
+(3-4 nəfər, Week 2-4 əhatəsində).
 
-Canlı yaz, onlar yazsın. Əvvəlcə `merge` (birləşdirmə), sonra `mergeSort`.
+1. **Bubble sort** — iç-içə dövr, yan-yana müqayisə
+2. **Selection sort** — qalan hissədən minimum tapıb əvvələ qoy
+3. **Insertion sort** — sıralanmış hissəyə düzgün yerə soxmaq
+4. **Counting sort** — sayğac massivi (yalnız 0-100 aralığında ədədlər üçün sına)
+
+Hər alqoritmi eyni test massivində işlət, nəticələri çap et, hamısının eyni
+sortlanmış nəticəni verdiyini göstər:
 
 ```java
-static void merge(int[] a, int left, int mid, int right) {
-    int[] temp = new int[right - left + 1];
-    int i = left, j = mid + 1, k = 0;
+int[] test = {5, 2, 9, 1, 5, 6, 3};
+```
 
-    while (i <= mid && j <= right) {
-        if (a[i] <= a[j]) temp[k++] = a[i++];
-        else temp[k++] = a[j++];
+Tez bitirən olsa, `System.nanoTime()` ilə 4-ünü böyük massivdə (məs. 10.000
+element) ölçdürt, fərqi gör.
+
+## 50-55 dəq · Körpü: frequency array-dan sliding window-a
+
+Qısa xatırlatma (bloka çevirmə): "Week 4-də frequency array pattern-ini
+gördünüz — bütün massivi gəzib sayğac qurmaq. Bəzən isə bütün massivə yox,
+massivin **ardıcıl bir parçasına** (pəncərə) baxmaq lazımdır. Bu, sliding
+window-dur."
+
+## 55-85 dəq · Pattern: Sliding window (sabit ölçü)
+
+**İdeya:** `k` ölçülü pəncərəni massiv üzərində sürüşdür, hər addımda yalnız
+**çıxan və daxil olan** elementi hesaba al — hər dəfə bütün pəncərəni yenidən
+cəmləməyə ehtiyac yoxdur.
+
+```
+a = [2, 1, 5, 1, 3, 2], k = 3
+
+pəncərə [2,1,5] cəm=8
+sürüşdür: cəm = cəm - a[0] + a[3] = 8 - 2 + 1 = 7   → [1,5,1]
+sürüşdür: cəm = cəm - a[1] + a[4] = 7 - 1 + 3 = 9   → [5,1,3]
+sürüşdür: cəm = cəm - a[2] + a[5] = 9 - 5 + 2 = 6   → [1,3,2]
+```
+
+```java
+static int maxSumSubarray(int[] a, int k) {
+    int windowSum = 0;
+    for (int i = 0; i < k; i++) windowSum += a[i];   // ilk pəncərə
+
+    int maxSum = windowSum;
+    for (int i = k; i < a.length; i++) {
+        windowSum += a[i] - a[i - k];                // çıxan/daxil olan
+        maxSum = Math.max(maxSum, windowSum);
     }
-    while (i <= mid)   temp[k++] = a[i++];
-    while (j <= right) temp[k++] = a[j++];
-
-    for (int x = 0; x < temp.length; x++) {
-        a[left + x] = temp[x];
-    }
-}
-
-static void mergeSort(int[] a, int left, int right) {
-    if (left >= right) return;
-    int mid = (left + right) / 2;
-    mergeSort(a, left, mid);
-    mergeSort(a, mid + 1, right);
-    merge(a, left, mid, right);
+    return maxSum;
 }
 ```
 
-**Lövhəyə mütləq:** `merge`-i kiçik nümunə üzərində (`[3,8]` + `[1,5]`) üç
-göstəricini (`i`, `j`, `k`) əl ilə izləyərək göstər — mühazirədə ideya
-görmüşdülər, burada göstəricilərin necə irəlilədiyini görsünlər.
+**Vurğula:** brute force (hər pəncərəni sıfırdan cəmləmək) O(n×k) olardı,
+sliding window ilə **O(n)** — hər element yalnız bir dəfə əlavə, bir dəfə
+çıxarılır. Bu, həmin "iki yol, bir sürət fərqi" hissinin (Week 2) davamıdır.
 
-Sına: `main`-də 8 elementlik qarışıq massiv ver, çap et, çağır, yenə çap et.
+Məsələlər (LeetCode, sabit ölçü pəncərə):
+1. **Maximum Average Subarray I (643)** — yuxarıdaki kodun üstündə, cəmi `k`-ya böl
+2. **Maximum Sum Subarray of Size K** (GeeksforGeeks klassiki, LeetCode-da yoxdur
+   amma çox tapşırılır) — yuxarıdaki kodu birbaşa yaz
 
-**Tez-tez düşülən xəta:** `mergeSort(a, 0, a.length)` yazırlar — `a.length - 1`
-olmalıdır, çünki `right` indeksdir, uzunluq deyil. Lövhəyə qırmızı ilə işarələ.
+**Bonus (tez bitirənlər üçün, dəyişən ölçü pəncərə — qabaqcadan göstər):**
+3. **Minimum Size Subarray Sum (209)** — pəncərə böyüyür/kiçilir, cəm şərtə görə
 
-## 40-55 dəq · Quick sort — partition canlı
-
-```java
-static int partition(int[] a, int left, int right) {
-    int pivot = a[right];       // sonuncu element pivot
-    int i = left - 1;           // pivotdan kiçiklərin son indeksi
-
-    for (int j = left; j < right; j++) {
-        if (a[j] < pivot) {
-            i++;
-            int tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-        }
-    }
-    int tmp = a[i + 1]; a[i + 1] = a[right]; a[right] = tmp; // pivotu yerinə qoy
-    return i + 1;                // pivotun son indeksi
-}
-
-static void quickSort(int[] a, int left, int right) {
-    if (left >= right) return;
-    int pivotIndex = partition(a, left, right);
-    quickSort(a, left, pivotIndex - 1);
-    quickSort(a, pivotIndex + 1, right);
-}
-```
-
-Partition-u **kiçik nümunədə əl ilə izlə** (lövhədə, kod yazmadan əvvəl):
-`[8,3,5,1,4]`, pivot = `4`. `i` və `j`-nin hər addımda harada olduğunu göstər,
-sonra kodu yaz.
-
-Sına: eyni 8 elementlik massivi quick sort-la sortla, nəticəni merge sort-la
-müqayisə et (ikisi də düzgün sortlayırsa, yaxşı).
-
-## 55-85 dəq · Sərbəst iş + pattern + şifahi sorğu
-
-**Bu blok paralel gedir:** əksəriyyət məsələ həll edir, sən rotasiya ilə
-3-4 nəfəri çağırıb şifahi sorğu aparırsan (`assessment/oral.md` — Week 2-4,
-massiv/bubble/counting sort/linear search, 10 bal). Təsadüfi çağır,
-əvvəlcədən demə.
-
-**Pattern: Divide & conquer** (son 20 dəqiqənin əsas məzmunu, sorğu ilə yanaşı
-ver) — *böl, kiçik hissəni həll et, birləşdir*. Bu gün görülən merge sort elə
-bu pattern-in nümunəsidir.
-
-Məsələlər (LeetCode):
-1. **Merge Sorted Array (88)** — iki sortlanmış massivi birləşdir, merge
-   addımına çox bənzəyir
-2. **Sort an Array (912)** — bu gün yazdığın `mergeSort`-u və ya `quickSort`-u
-   birbaşa istifadə et
-3. **Sort Colors (75)** — bonus, tez bitirənlər üçün (Dutch flag, partition-a
-   bənzər fikir)
-
-Gəzirsən, ilişənə sual verirsən, həllini demirsən.
+Gəzirsən, ilişənə sual verirsən, kodu demirsən.
 
 ## 85-90 dəq · Push
 
 Hamı `week-05/` qovluğuna push etsin. Push etməyəni və şifahi sorğuda kim
-çağırıldığını qeyd et (bal cədvəli üçün).
+çağırıldığını qeyd et.
 
 ## Müəllim qeydi
 
-Partition-un tam kodu mühazirədə yox, burada verilir — plan belə qərarlaşdırılıb
-(bax `plan.md`, "Sıx həftələr"). Vaxt azalsa, Sort Colors-u at, yalnız Merge
-Sorted Array + Sort an Array kifayətdir.
+Bu məşğələ əslində Week 3/4-ün tamamlanmasıdır (bubble sort rəsmən Week 3-ün,
+counting sort Week 4-ün mövzusu idi, ICAO-due düzgün keçilməmişdi). Insertion
+və selection sort rəsmi planda yoxdur, bu il əlavə edilib. Sliding window
+planda Week 6 üçün (ikinci mərtəbə) nəzərdə tutulmuşdu, bura tezləşdi —
+`patterns/README.md`-i buna uyğun yenilə.

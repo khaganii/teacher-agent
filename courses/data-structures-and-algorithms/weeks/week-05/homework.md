@@ -1,49 +1,43 @@
-# Week 5 — Ev tapşırığı: Divide & conquer
+# Week 5 — Ev tapşırığı: Sortlama I + Sliding window
 
-Hamısı bu həftənin pattern-indəndir (böl → həll et → birləşdir). Məşğələdə
-yazdığın `mergeSort`/`quickSort`-u bitirməmisənsə, əvvəlcə onu tamamla —
-qalan tapşırıqlar onun üstündə qurulur.
+İlk 2 tapşırıq sortlamanın tamamlanmasıdır. 3-5 bu həftənin pattern-indəndir
+(sliding window — sabit ölçülü pəncərə). Məşğələdə yazdığın 4 sortlama
+metodunu bitirməmisənsə, əvvəlcə onları tamamla.
 
-## 1. Rekursiya isinmə — massivin cəmi
+## 1. 4 sortu bir yerdə sına
 
-Dövr olmadan, yalnız rekursiya ilə massivin elementlərinin cəmini tap.
+`bubbleSort`, `selectionSort`, `insertionSort`, `countingSort` metodlarının
+hamısını eyni `main`-ə yığ, aşağıdaki massivlərin hər biri üzərində sına,
+nəticəni qeyd et (hamısı eyni sortlanmış nəticəni verməlidir):
 
-```java
-static int sum(int[] a, int index) {
-    // TODO: base case — index massivin sonuna çatanda 0 qaytar
-    // TODO: recursive case — a[index] + qalanının cəmi
-}
-```
-
-`main`-də `{3, 7, 1, 9, 2}` ilə sına, nəticə `22` olmalıdır.
-
-## 2. Merge Sorted Array (LeetCode 88)
-
-İki sortlanmış massivi bir sortlanmış massivə birləşdir — bu, dərsdə yazdığın
-`merge` metoduna çox bənzəyir, fərq ikinci massivin birinci massivin sonuna
-yazılmasıdır.
-
-## 3. Sort an Array (LeetCode 912)
-
-Öz `mergeSort` və ya `quickSort`-unu (dərsdən) birbaşa istifadə et. Əgər
-dərsdə yetişdirə bilmədinsə, bu, onu bitirmək üçün fürsətdir.
-
-## 4. Kənar halları yoxla
-
-`mergeSort`-unu (və ya `quickSort`-unu) aşağıdaki massivlərin hər biri üzərində
-işlət, nəticəni qeyd et (düzgün sortlayır, ya yox):
-
+- `{5, 2, 9, 1, 5, 6, 3}`
 - Boş massiv `{}`
-- Bir elementli `{5}`
-- Bütün elementlər eyni `{4, 4, 4, 4}`
+- Bir elementli `{7}`
 - Artıq sortlanmış `{1, 2, 3, 4, 5}`
 - Tərsinə sortlanmış `{5, 4, 3, 2, 1}`
 
 Bunlar şifahi sorğuda soruşulan "kənar hal" sualları ilə birbaşa bağlıdır —
 hazırlıqlı gəl.
 
+## 2. Stability-ni öz gözünlə gör
+
+`(dəyər, etiket)` cütlərindən ibarət massiv düşün: `(3,A), (1,B), (3,C), (2,D)`.
+Selection sort-la dəyərə görə sırala, `A` və `C`-nin nisbi sırasının qorunub-
+qorunmadığını yoxla (ipucu: qorunmur — bu, selection sort-un qeyri-stabil
+olduğunun sübutudur). Eynisini bubble sort-la təkrarla, bu dəfə sıra qorunur.
+
+## 3. Maximum Average Subarray I (LeetCode 643)
+
+Dərsdəki `maxSumSubarray`-ə çox bənzəyir — sabit `k` ölçülü pəncərənin
+ortalamasını tap.
+
+## 4. Sliding window sıfırdan — massivin maksimum cəmi
+
+Dərsdə yazdığın `maxSumSubarray`-i şablonsuz, yaddaşdan yenidən yaz. `k=3`,
+`a = {4, 2, 1, 7, 8, 1, 2, 8, 1, 0}` ilə sına.
+
 ## Bonus (tez bitirənlər üçün)
 
-**Sort Colors (LeetCode 75).** Massivdə yalnız `0`, `1`, `2` var — bir keçiddə
-(əlavə sort çağırmadan) sırala. Partition-dakı "kiçik/böyük ayırma" fikri
-burada üç qrupa bölünür.
+**Minimum Size Subarray Sum (LeetCode 209).** Pəncərə sabit ölçülü deyil —
+cəm verilən dəyərdən böyük-bərabər olana qədər böyüyür, sonra kiçilə bilər.
+Dərsdə qısa göstərilən dəyişən ölçü ideyasının tam versiyası.
