@@ -40,6 +40,7 @@ Pattern mövzu deyil — mövzunun tətbiq formasıdır. Ayrıca həftə tutmur.
 | BFS shortest path | 14 |
 | Union-Find | 14 |
 | Cyclic sort | 3 |
+| Circular array (dövrü indeks, `% capacity`) | 7-8 (Queue) |
 
 ## Planda olmayanlar
 

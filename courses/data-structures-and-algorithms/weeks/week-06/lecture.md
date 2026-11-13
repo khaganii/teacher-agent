@@ -13,13 +13,17 @@ burada deyil — məşğələdə canlı kodlanacaq (bax `practice.md`).
 **Qeyd:** bu, sıx həftədir — plana görə rekursiya + 2 sort 90 dəqiqəyə çətin
 sığır. Vaxt azalsa, quickselect-i qısalt, əsas itki ora getsin.
 
-## 0-5 dəq · Açılış
+**Faktiki nəticə:** mühazirə saatında yalnız rekursiya bölməsinə çatıldı.
+Merge sort/quick sort/quickselect ayrıca əlavə mühazirə saatına keçdi — bax
+`extra-lecture.md` və `notes.md`.
+
+## Açılış
 
 Keçən həftə bubble, insertion, selection, counting sort yazıldı. Bunu körpü
 kimi işlət: "bu dördü O(n²) və ya əlavə yaddaş istəyirdi — bu gün daha ağıllı
 bir yol görəcəyik."
 
-## 5-25 dəq · Rekursiya
+## Rekursiya
 
 Tərifdən yox, nümunədən başla.
 
@@ -54,7 +58,7 @@ Bu, sözdən daha yaxşı yadda qalır.
 daha təbiidir?" → cavab: problem öz-özünün kiçik versiyasına bölünəndə
 (ağac, divide & conquer).
 
-## 25-55 dəq · Merge sort
+## Merge sort
 
 **İdeya əvvəl, kod sonra.** Lövhəyə 8 elementlik massiv çək, əl ilə bölə-bölə
 göstər:
@@ -94,7 +98,7 @@ hal fərq etmir. Niyə: log n səviyyə, hər səviyyədə n iş.
 Yaddaş: merge sort əlavə massiv istəyir — **O(n) əlavə yaddaş**. Keçən həftənin
 sortları ilə müqayisə et (lövhəyə əlavə sətir): stabil, əlavə yaddaş istəyir.
 
-## 55-75 dəq · Quick sort (konseptual)
+## Quick sort (konseptual)
 
 **İdeya:** bir element seç (**pivot**), massivi pivotdan kiçiklər və böyüklər
 olaraq iki yerə böl (**partition**), hər iki yarını rekursiv sortla. Merge
@@ -123,13 +127,13 @@ Merge sort vs quick sort cədvəli lövhəyə:
 | Stabil? | bəli | xeyr |
 | Praktikada | — | adətən daha sürətli (cache-friendly) |
 
-## 75-85 dəq · Quickselect (qısa)
+## Quickselect (qısa)
 
 Bir cümlə ilə bağla: "K-ci ən kiçik elementi tapmaq üçün massivi **tam**
 sortlamağa ehtiyac yoxdur — partition-u bir tərəfə davam etdir, digər tərəfi at."
 Kod yox, yalnız ideya. Tam material Week 10-da top-K məsələsində qayıdacaq.
 
-## 85-90 dəq · Yekun və tapşırıq
+## Yekun və tapşırıq
 
 - Bu həftə məşğələdə nə olacaq: rekursiv metodlar + merge sort-u tam kodlamaq +
   quick sort partition-u canlı yazmaq
